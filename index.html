@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Viknesh | Unity & Automation Developer</title>
+<style>
+  :root{
+    --bg1:#0b0612; --bg2:#000000; --muted:#c6b7ff;
+    --accent:#b829ff; --accent2:#ff2ea6; --card:rgba(255,255,255,.05);
+    --maxw:1280px; --prop-opacity:.78; --heroMax:960px;
+  }
+  @font-face{font-family:"Sora"; src:url("fonts/Sora-Variable.woff2") format("woff2"); font-weight:100 800; font-style:normal; font-display:swap;}
+  @font-face{font-family:"Inter"; src:url("fonts/Inter-Variable.woff2") format("woff2"); font-weight:100 900; font-style:normal; font-display:swap;}
+
+  *{box-sizing:border-box}
+  body{margin:0; font-family:Inter, system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#fff;
+       background:linear-gradient(180deg,var(--bg1),var(--bg2)); overflow-x:hidden;}
+  h1,h2,h3{font-family:Sora, Inter, system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+  a{color:#fff; text-decoration:none}
+
+  /* ===== Nav + progress ===== */
+  .nav{position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); background:rgba(8,6,14,.45);
+       border-bottom:1px solid rgba(255,255,255,.08)}
+  .nav-inner{max-width:var(--maxw); margin:0 auto; padding:10px 16px; display:flex; align-items:center; justify-content:space-between}
+  .brand{font-weight:700; letter-spacing:.3px}
+  .nav a.link{opacity:.9; margin-left:16px}
+  .nav a.link:hover{opacity:1; text-decoration:underline; text-underline-offset:4px}
+  .toggle{margin-left:12px; padding:6px 10px; border-radius:8px; border:1px solid rgba(255,255,255,.15);
+          background:rgba(255,255,255,.06); cursor:pointer; font-size:.9rem}
+  .progress{position:fixed; top:0; left:0; height:3px; width:0; z-index:60;
+            background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+  /* ===== Particles (behind props) ===== */
+  canvas#particles{position:fixed; inset:0; width:100%; height:100%; z-index:-3}
+
+  /* ===== Sections ===== */
+  section{padding:84px 20px; max-width:var(--maxw); margin:0 auto; position:relative}
+  section + section::before{
+    content:""; position:absolute; top:-1px; left:50%; transform:translateX(-50%);
+    width:min(92%,1200px); height:1px;
+    background:linear-gradient(90deg,transparent, rgba(184,41,255,.35), transparent); opacity:.8;
+  }
+  h2{margin:0 0 14px; font-size:32px; text-align:center}
+  .sec-lead{color:var(--muted); margin:0 auto 28px; max-width:78ch; text-align:center; font-size:1.2rem; line-height:1.7}
+
+  /* Ambient sweep per section */
+  section.ambient::after{
+    content:""; position:absolute; inset:-8% -12%; z-index:-2; pointer-events:none;
+    background:
+      radial-gradient(700px 360px at 20% 30%, rgba(184,41,255,.10), transparent 60%),
+      radial-gradient(560px 280px at 80% 70%, rgba(255,46,166,.08), transparent 60%);
+    animation: ambientSweep 18s ease-in-out infinite alternate; filter:saturate(115%) blur(.2px);
+  }
+  @keyframes ambientSweep{0%{transform:translateX(-3%) translateY(-1%)}100%{transform:translateX(3%) translateY(1%)}}
+
+  /* Full-bleed prop layer (above particles) */
+  .scene{
+    position:absolute; top:0; bottom:0; left:50%; width:100vw; transform:translateX(-50%);
+    z-index:0; pointer-events:none; overflow:visible;
+  }
+  .prop{position:absolute; opacity:var(--prop-opacity); will-change:transform; filter:drop-shadow(0 12px 28px rgba(184,41,255,.5))}
+  @media (max-width:900px){ .prop{opacity:.2} }
+
+  /* Prop entrance (once) */
+  @keyframes enterUp{0%{opacity:0; transform:translateY(24px) scale(.98)}100%{opacity:var(--prop-opacity); transform:none}}
+  @keyframes enterDown{0%{opacity:0; transform:translateY(-24px) scale(.98)}100%{opacity:var(--prop-opacity); transform:none}}
+  @keyframes enterLeft{0%{opacity:0; transform:translateX(24px) scale(.98)}100%{opacity:var(--prop-opacity); transform:none}}
+  @keyframes enterRight{0%{opacity:0; transform:translateX(-24px) scale(.98)}100%{opacity:var(--prop-opacity); transform:none}}
+  .prop.enter-up{animation:enterUp .55s ease-out both}
+  .prop.enter-down{animation:enterDown .55s ease-out both}
+  .prop.enter-left{animation:enterLeft .55s ease-out both}
+  .prop.enter-right{animation:enterRight .55s ease-out both}
+
+  /* ===== Hero ===== */
+  header.hero{position:relative; height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; overflow:hidden}
+  header.hero .bg-drift{content:""; position:absolute; inset:-20%;
+    background:radial-gradient(1200px 600px at 20% 20%, rgba(184,41,255,.18), transparent 60%),
+               radial-gradient(900px 500px at 80% 70%, rgba(255,46,166,.16), transparent 60%);
+    animation: drift 16s ease-in-out infinite alternate; z-index:-2;}
+  @keyframes drift{0%{transform:translate3d(-10px,-8px,0) scale(1)}100%{transform:translate3d(10px,8px,0) scale(1.03)}}
+  .glass-card{
+    background:var(--card); padding:36px; border-radius:18px; backdrop-filter:blur(12px);
+    box-shadow:0 0 28px rgba(184,41,255,.45);
+    max-width:var(--heroMax); width:min(92vw,var(--heroMax));
+    text-align:center; border:1px solid rgba(255,255,255,.07); position:relative; z-index:1;
+  }
+  .hero h1{font-size:44px; margin:0 0 10px}
+  .hero p{color:#e7e0ff; margin:0 0 22px; max-width:70ch; margin-inline:auto}
+  .btn{display:inline-block; margin:.4rem; padding:.78rem 1.5rem; border-radius:10px; color:#fff;
+       border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.07)}
+  .btn.primary{border:none; background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .btn-row{display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center}
+
+  /* ===== Center widths for key sections ===== */
+  #about, #projects, #contact{max-width:var(--heroMax); margin:0 auto; text-align:center}
+
+  /* ===== Carousel (1-up, 16:9, loop, big arrows on hover) ===== */
+  .group-head{display:flex; align-items:baseline; gap:10px; justify-content:center; margin:18px 0 10px}
+  .chip{font-size:.8rem; padding:4px 10px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); color:#e6dcff}
+  .carousel{position:relative; margin:12px auto 28px; max-width:var(--heroMax); aspect-ratio:16/9; height:auto; overflow:hidden; border-radius:12px}
+  .track{display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; padding-bottom:6px}
+  .slide{flex:0 0 100%; scroll-snap-align:start}
+  .carousel img{width:100%; height:100%; object-fit:cover}
+
+  .carousel .arrow{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:10;
+    width:56px; height:56px; border-radius:50%; display:grid; place-items:center; cursor:pointer;
+    background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.22); backdrop-filter:blur(8px);
+    font-size:1.6rem; color:#fff; opacity:0; pointer-events:none; transition:opacity .25s ease, transform .2s ease, background .25s ease;
+  }
+  .carousel:hover .arrow{opacity:1; pointer-events:auto}
+  .carousel .arrow:hover{background:rgba(28,26,26,.49); transform:translateY(-50%) scale(1.06)}
+  .carousel .arrow.left{left:16px} .carousel .arrow.right{right:16px}
+  @media (hover:none){ .carousel .arrow{opacity:1; pointer-events:auto} }
+
+  /* ===== Project cards + glass overlay ===== */
+  .project{position:relative; background:var(--card); border:1px solid rgba(255,255,255,.10);
+           border-radius:12px; overflow:hidden; box-shadow:0 0 16px rgba(0,0,0,.45);
+           transition:transform .3s ease, box-shadow .3s ease}
+  .project:hover{transform:perspective(900px) translateY(-2px) rotateX(1deg) scale(1.01)}
+  .project a{display:block}
+  .project a img,.project .slideshow{width:100%; aspect-ratio:16/9; height:auto; object-fit:cover; display:block}
+  .project-content{
+    position:absolute; left:0; right:0; bottom:0; padding:18px 16px; text-align:center; z-index:2;
+    background:linear-gradient(180deg, rgba(12,6,18,0) 0%, rgba(18,10,30,.35) 38%, rgba(18,10,30,.68) 100%);
+    backdrop-filter:blur(10px) saturate(120%); -webkit-backdrop-filter:blur(10px) saturate(120%);
+    border-top:1px solid rgba(255,255,255,.18); opacity:0; transform:translateY(8px);
+    transition:opacity .35s ease, transform .35s ease; pointer-events:none;
+  }
+  .project:hover .project-content{opacity:1; transform:none}
+  .project-content h3{margin:6px 0 4px; color:#fff}
+  .project-content p{margin:0 0 10px; color:#ece6ff; font-size:.95rem}
+  .tag{color:var(--muted); font-size:.85rem; margin-bottom:4px}
+  .project-content .cta{pointer-events:auto; display:inline-block; padding:.55rem 1rem; border-radius:10px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2)); color:#fff; font-weight:600; border:none; text-decoration:none;
+    box-shadow:0 6px 18px rgba(184,41,255,.35); position:relative; z-index:5}
+  .project-content .cta:hover{transform:translateY(-1px)}
+
+  /* ===== Slideshows (Speakaroo/Writearoo) ===== */
+  .slideshow{position:relative; aspect-ratio:16/9; background:#120a1f; overflow:hidden}
+  .slideshow img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transform:scale(1);
+                 transition:opacity .6s ease, transform 3.6s ease}
+  .slideshow img.active{opacity:1; transform:scale(1.08)}
+  .dots{position:absolute; left:50%; bottom:8px; transform:translateX(-50%); display:flex; gap:6px; z-index:2}
+  .dot{width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.25); cursor:pointer}
+  .dot.active{background:linear-gradient(90deg,var(--accent),var(--accent2)); border:none}
+
+  /* ===== Grids + stack badges ===== */
+  .grid-2-3{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .card{background:var(--card); border:1px solid rgba(255,255,255,.10); border-radius:14px; padding:18px; text-align:center}
+  .stack{display:flex; gap:22px; justify-content:center; align-items:center; flex-wrap:wrap; margin:20px auto 0; opacity:.95}
+  .stack .badge{height:36px; width:auto; opacity:.9; filter:drop-shadow(0 2px 10px rgba(0,0,0,.25)); transition:transform .2s ease, opacity .2s ease}
+  .stack .badge:hover{transform:translateY(-2px); opacity:1}
+
+  /* ===== Contact ===== */
+  #contact .btn.primary{display:block; width:fit-content; margin:14px auto 0}
+  .icon-links{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+  .icon-btn{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px;
+            background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12)}
+  .icon-btn:hover{transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.4)}
+  .copy{cursor:pointer; padding:6px 10px; border-radius:8px; margin-left:6px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); font-size:.85rem}
+  .copy:hover{background:rgba(255,255,255,.1)}
+  .contact-links{display:grid; gap:8px; justify-items:center}
+  .contact-links a{text-decoration:underline; text-underline-offset:3px}
+  .contact-links a:hover{filter:drop-shadow(0 0 8px rgba(184,41,255,.55))}
+
+  /* ===== Idle animations ===== */
+  @keyframes bob{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  @keyframes sway{0%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}100%{transform:rotate(-2deg)}}
+  @keyframes driftxy{0%{transform:translate(0,0)}50%{transform:translate(6px,4px)}100%{transform:translate(0,0)}}
+  @keyframes rotateSlow{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  @keyframes rock{0%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}100%{transform:rotate(-3deg)}}
+  @keyframes shimmer{0%{filter:drop-shadow(0 0 0 rgba(255,255,255,0))}50%{filter:drop-shadow(0 0 16px rgba(255,255,255,.18))}100%{filter:drop-shadow(0 0 0 rgba(255,255,255,0))}}
+  @keyframes bounceSmall{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes swoop{0%{transform:translate(0,0) rotate(0)}40%{transform:translate(-20px,-16px) rotate(-6deg)}60%{transform:translate(40px,-10px) rotate(8deg)}100%{transform:translate(0,0) rotate(0)}}
+  .run.bob{animation:bob 5.5s ease-in-out infinite}
+  .run.sway{animation:sway 6.5s ease-in-out infinite}
+  .run.driftxy{animation:driftxy 8s ease-in-out infinite}
+  .run.rotateSlow{animation:rotateSlow 20s linear infinite}
+  .run.rock{animation:rock 9s ease-in-out infinite}
+  .run.shimmer{animation:shimmer 6s ease-in-out infinite}
+  .run.bounceSmall{animation:bounceSmall 4.8s ease-in-out infinite}
+  .run.swoop{animation:swoop 2.2s ease-in-out 1}
+
+  /* ===== Replayable reveals ===== */
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease}
+  .reveal.show{opacity:1; transform:none}
+
+  body.reduce-motion *{animation:none !important; transition:none !important}
+  @media (max-width:760px){ .hero h1{font-size:36px} }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">Viknesh | Unity & Automation Developer</div>
+    <div>
+      <a href="#about" class="link">About</a>
+      <a href="#services" class="link">Services</a>
+      <a href="#projects" class="link">Projects</a>
+      <a href="#tools" class="link">Tools</a>
+      <a href="#contact" class="link">Contact</a>
+      <button id="reduceToggle" class="toggle" aria-pressed="false">Reduce Motion: Off</button>
+    </div>
+  </div>
+</nav>
+
+<canvas id="particles"></canvas>
+
+<header class="hero">
+  <div class="bg-drift"></div>
+  <div class="scene">
+    <img class="prop" data-enter="right" style="right:-40px; bottom:-30px; width:min(38vw,540px)" src="Images/props/gamepad.png" alt="" aria-hidden="true" id="p-hero-gamepad">
+    <img class="prop" data-enter="left"  style="left:-40px; top:-30px; width:min(40vw,580px)"  src="Images/props/codecard.png" alt="" aria-hidden="true" id="p-hero-code">
+  </div>
+
+  <div class="glass-card reveal" id="hero-card">
+    <h1>Viknesh | Unity & Automation Developer</h1>
+    <p>Designing engaging Unity games with polished mechanics, backed by Python automation to streamline development and workflows.</p>
+    <a href="#projects" class="btn primary">See Projects</a>
+    <a href="#about" class="btn">About Me</a>
+  </div>
+</header>
+
+<!-- Separator under hero -->
+<div style="position:relative; height:1px; margin:0 auto; max-width:min(92%,1200px);
+            background:linear-gradient(90deg,transparent, rgba(184,41,255,.35), transparent); opacity:.85;"></div>
+
+<section id="about" class="reveal ambient">
+  <div class="scene">
+    <img class="prop" data-enter="left" style="left:-20px; top:-20px; width:min(32vw,460px)" src="Images/props/laptop.png" alt="" aria-hidden="true" id="p-about-laptop">
+  </div>
+
+  <h2>About Me</h2>
+  <p class="sec-lead">
+    I’m a Unity developer and automation enthusiast who blends creativity with efficiency.
+    I specialize in building immersive, optimized gameplay experiences while developing Python-powered tools that streamline workflows.
+    Whether crafting game worlds or creating scripts that save hours, I deliver reliable results for both full-time and freelance projects.
+  </p>
+
+  <div class="grid-2-3">
+    <div class="card"><strong>Tech Stack</strong><br/>Unity, C#, Python, Blender, Git / Version Control</div>
+    <div class="card"><strong>Languages</strong><br/>Tamil (Native), English (Fluent), Telugu (Conversational – spoken)</div>
+  </div>
+
+  <!-- Stack icons -->
+  <div class="stack">
+    <!-- Inline minimal badges (fast & offline) -->
+    <svg class="badge" viewBox="0 0 256 256" aria-label="Unity"><path fill="#fff" d="M128 18l66 38v76l-66 38-66-38V56l66-38zm0 20L78 66v60l50 28 50-28V66l-50-28z"/></svg>
+    <svg class="badge" viewBox="0 0 256 256" aria-label="C#"><rect x="16" y="16" width="224" height="224" rx="28" fill="#512BD4"/><text x="72" y="155" font-family="Sora,Arial" font-weight="800" font-size="96" fill="#fff">C#</text></svg>
+    <svg class="badge" viewBox="0 0 256 256" aria-label="Python"><defs><linearGradient id="p" x1="0" x2="1"><stop stop-color="#3776AB"/><stop offset="1" stop-color="#FFD43B"/></linearGradient></defs><rect x="16" y="16" width="224" height="224" rx="28" fill="url(#p)"/><text x="58" y="154" font-family="Sora,Arial" font-weight="800" font-size="72" fill="#fff">Py</text></svg>
+    <svg class="badge" viewBox="0 0 256 256" aria-label="Git"><rect x="16" y="16" width="224" height="224" rx="28" fill="#F34F29"/><text x="88" y="155" font-family="Sora,Arial" font-weight="900" font-size="72" fill="#fff">git</text></svg>
+    <svg class="badge" viewBox="0 0 256 256" aria-label="Android"><rect x="16" y="16" width="224" height="224" rx="28" fill="#3DDC84"/><text x="36" y="155" font-family="Sora,Arial" font-weight="800" font-size="64" fill="#001B12">Android</text></svg>
+    <svg class="badge" viewBox="0 0 256 256" aria-label="iOS"><rect x="16" y="16" width="224" height="224" rx="28" fill="#000"/><text x="88" y="155" font-family="Sora,Arial" font-weight="800" font-size="72" fill="#fff">iOS</text></svg>
+    <svg class="badge" viewBox="0 0 256 256" aria-label="Blender"><rect x="16" y="16" width="224" height="224" rx="28" fill="#F5792A"/><text x="34" y="155" font-family="Sora,Arial" font-weight="800" font-size="60" fill="#fff">Blender</text></svg>
+  </div>
+</section>
+
+<section id="services" class="reveal ambient">
+  <h2>Services</h2>
+  <div class="grid-2-3">
+    <div class="card"><strong>Unity game development</strong><br/>Mechanics, systems, polish.</div>
+    <div class="card"><strong>Prototype creation</strong><br/>Rapid iteration & gameplay loops.</div>
+    <div class="card"><strong>Game optimization</strong><br/>Performance & scalability.</div>
+    <div class="card"><strong>Python automation</strong><br/>Custom scripts for dev pipelines.</div>
+  </div>
+</section>
+
+<section id="projects" class="reveal ambient">
+  <div class="scene">
+    <img class="prop" data-enter="right" style="right:-10px; top:-10px; width:min(30vw,420px)" src="Images/props/vrheadset.png" alt="" aria-hidden="true" id="p-projects-vr">
+  </div>
+
+  <h2>Projects</h2>
+  <p class="sec-lead">A selection of Unity games and published mobile apps.</p>
+
+  <!-- Unity Games -->
+  <div class="group-head">
+    <h3 style="margin:0">Unity Games</h3><span class="chip">4 projects</span>
+  </div>
+  <div class="carousel" data-id="games">
+    <button class="arrow left" aria-label="Previous">‹</button>
+    <div class="track">
+      <div class="slide">
+        <article class="project">
+          <a href="https://youtu.be/ADn2TRuV09g" target="_blank" rel="noopener">
+            <img src="https://img.youtube.com/vi/ADn2TRuV09g/hqdefault.jpg" alt="Snake Game video thumbnail">
+          </a>
+          <div class="project-content">
+            <div class="tag">Unity • Desktop</div>
+            <h3>Snake Game</h3>
+            <p>Pixel-style Unity game with snake growth, self-collision, high-score saving, and a functional UI.</p>
+            <a class="cta" href="https://youtu.be/ADn2TRuV09g" target="_blank" rel="noopener">Watch demo</a>
+          </div>
+        </article>
+      </div>
+      <div class="slide">
+        <article class="project">
+          <a href="https://youtu.be/KNR58x6eZZ0" target="_blank" rel="noopener">
+            <img src="https://img.youtube.com/vi/KNR58x6eZZ0/hqdefault.jpg" alt="Arcade Pong video thumbnail">
+          </a>
+          <div class="project-content">
+            <div class="tag">Unity • Desktop</div>
+            <h3>Arcade Pong Game</h3>
+            <p>Modern Pong built to explore AI for competitive & co-op play, with responsive, retro-clean feel.</p>
+            <a class="cta" href="https://youtu.be/KNR58x6eZZ0" target="_blank" rel="noopener">Watch demo</a>
+          </div>
+        </article>
+      </div>
+      <div class="slide">
+        <article class="project">
+          <a href="https://youtu.be/wl0SXdFplUM" target="_blank" rel="noopener">
+            <img src="https://img.youtube.com/vi/wl0SXdFplUM/hqdefault.jpg" alt="2D Platformer video thumbnail">
+          </a>
+          <div class="project-content">
+            <div class="tag">Unity • Desktop</div>
+            <h3>2D Platformer (Unity 2D Kit)</h3>
+            <p>Level-design practice with Cinemachine camera work and short story cutscenes for immersion.</p>
+            <a class="cta" href="https://youtu.be/wl0SXdFplUM" target="_blank" rel="noopener">Watch demo</a>
+          </div>
+        </article>
+      </div>
+      <div class="slide">
+        <article class="project">
+          <a href="https://youtu.be/2XxbQUis6p8" target="_blank" rel="noopener">
+            <img src="https://img.youtube.com/vi/2XxbQUis6p8/hqdefault.jpg" alt="Fragmented Memories video thumbnail">
+          </a>
+          <div class="project-content">
+            <div class="tag">Unity (HDRP) • Desktop</div>
+            <h3>Fragmented Memories</h3>
+            <p>3D platformer using HDRP visuals, Timeline cutscenes, Cinemachine cameras, and NavMesh enemy AI.</p>
+            <a class="cta" href="https://youtu.be/2XxbQUis6p8" target="_blank" rel="noopener">Watch demo</a>
+          </div>
+        </article>
+      </div>
+    </div>
+    <button class="arrow right" aria-label="Next">›</button>
+  </div>
+
+  <!-- Published Apps -->
+  <div class="group-head" style="margin-top:6px">
+    <h3 style="margin:0">Published Apps</h3><span class="chip">Android & iOS</span>
+  </div>
+  <div class="carousel" data-id="apps">
+    <button class="arrow left" aria-label="Previous">‹</button>
+    <div class="track">
+      <!-- Speakaroo -->
+      <div class="slide">
+        <article class="project">
+          <div class="slideshow" id="speakaroo-slideshow"></div>
+          <div class="project-content">
+            <div class="tag">Educational • Android & iOS</div>
+            <h3>Speakaroo: Speech Therapy</h3>
+            <p>Interactive speech-learning app for kids with voice-based gameplay and sensory-friendly mini-games.</p>
+            <div class="btn-row">
+              <!-- Play Store badge -->
+              <a href="https://play.google.com/store/apps/details?id=com.littlelearninglab.Speakaroo_Therapy" target="_blank" rel="noopener" aria-label="Get on Google Play">
+                <svg width="156" height="46" viewBox="0 0 156 46" role="img" aria-hidden="false">
+                  <rect rx="8" width="156" height="46" fill="#000"/>
+                  <g transform="translate(10,7)">
+                    <path d="M7.5 0l12 10-6 3.5-6-13.5z" fill="#34A853"/><path d="M7.5 22L19.5 12l-6-3.5-6 13.5z" fill="#EA4335"/><path d="M19.5 12l6.5 3.8c1 .6 1 2 0 2.6L19.5 22l-6-10 6-3.9z" fill="#FBBC05"/><path d="M7.5 0l6 10-6 3.9V0z" fill="#4285F4"/>
+                    <text x="30" y="19" fill="#fff" font-family="Inter, Arial" font-size="12" font-weight="700">GET IT ON</text>
+                    <text x="30" y="33" fill="#fff" font-family="Inter, Arial" font-size="16" font-weight="700">Google Play</text>
+                  </g>
+                </svg>
+              </a>
+              <!-- App Store badge -->
+              <a href="https://apps.apple.com/in/app/speakaroo-speech-therapy/id6737170125" target="_blank" rel="noopener" aria-label="Download on the App Store">
+                <svg width="156" height="46" viewBox="0 0 156 46" role="img">
+                  <rect rx="8" width="156" height="46" fill="#000"/>
+                  <g transform="translate(12,8)">
+                    <path d="M18 4c3 0 6 3 6 6s-3 6-6 6-6-3-6-6 3-6 6-6z" fill="#fff"/>
+                    <text x="28" y="12" fill="#fff" font-family="Inter, Arial" font-size="12" font-weight="700">Download on the</text>
+                    <text x="28" y="28" fill="#fff" font-family="Inter, Arial" font-size="16" font-weight="700">App Store</text>
+                  </g>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <!-- Writearoo -->
+      <div class="slide">
+        <article class="project">
+          <div class="slideshow" id="writearoo-slideshow"></div>
+          <div class="project-content">
+            <div class="tag">Educational • Android & iOS</div>
+            <h3>Writearoo: ABC & Word Writing</h3>
+            <p>Early writing app for ages 3–7 with letter tracing and word-building mini-games.</p>
+            <div class="btn-row">
+              <!-- Play Store badge -->
+              <a href="https://play.google.com/store/apps/details?id=com.littlelearninglab.writearoo" target="_blank" rel="noopener" aria-label="Get on Google Play">
+                <svg width="156" height="46" viewBox="0 0 156 46" role="img">
+                  <rect rx="8" width="156" height="46" fill="#000"/>
+                  <g transform="translate(10,7)">
+                    <path d="M7.5 0l12 10-6 3.5-6-13.5z" fill="#34A853"/><path d="M7.5 22L19.5 12l-6-3.5-6 13.5z" fill="#EA4335"/><path d="M19.5 12l6.5 3.8c1 .6 1 2 0 2.6L19.5 22l-6-10 6-3.9z" fill="#FBBC05"/><path d="M7.5 0l6 10-6 3.9V0z" fill="#4285F4"/>
+                    <text x="30" y="19" fill="#fff" font-family="Inter, Arial" font-size="12" font-weight="700">GET IT ON</text>
+                    <text x="30" y="33" fill="#fff" font-family="Inter, Arial" font-size="16" font-weight="700">Google Play</text>
+                  </g>
+                </svg>
+              </a>
+              <!-- App Store badge -->
+              <a href="https://apps.apple.com/in/app/writearoo/id6744399311" target="_blank" rel="noopener" aria-label="Download on the App Store">
+                <svg width="156" height="46" viewBox="0 0 156 46" role="img">
+                  <rect rx="8" width="156" height="46" fill="#000"/>
+                  <g transform="translate(12,8)">
+                    <path d="M18 4c3 0 6 3 6 6s-3 6-6 6-6-3-6-6 3-6 6-6z" fill="#fff"/>
+                    <text x="28" y="12" fill="#fff" font-family="Inter, Arial" font-size="12" font-weight="700">Download on the</text>
+                    <text x="28" y="28" fill="#fff" font-family="Inter, Arial" font-size="16" font-weight="700">App Store</text>
+                  </g>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+    <button class="arrow right" aria-label="Next">›</button>
+  </div>
+</section>
+
+<section id="tools" class="reveal ambient">
+  <div class="scene">
+    <img class="prop" data-enter="up"   style="left:-12px; bottom:-12px; width:min(30vw,420px)" src="Images/props/puzzle.png"   alt="" aria-hidden="true" id="p-tools-puzzle">
+    <img class="prop" data-enter="down" style="right:-10px; top:-10px;   width:min(26vw,360px)" src="Images/props/settings.png" alt="" aria-hidden="true" id="p-tools-gear">
+  </div>
+
+  <h2>Tools & Automation</h2>
+  <div class="grid-2-3">
+    <div class="card"><h3>Local Coaching Chatbot (LLM)</h3><p>Tkinter UI + local instruction-tuned model; session logging, persona templating, image-reactive UI slot.</p></div>
+    <div class="card"><h3>Immersive Audio/Video Player</h3><p>PyQt6 player with splash, animated background, panic key, settings.json, and a JS bridge for UI controls.</p></div>
+    <div class="card"><h3>Freelance Gig Tracker</h3><p>Lightweight dashboard to log leads, statuses, payouts, and reminders (CSV/SQLite backend).</p></div>
+    <div class="card"><h3>Browser Augmentation Toolkit</h3><p>Tampermonkey userscripts for text rewriting, overlays/notifications, and typing-rate hints.</p></div>
+  </div>
+</section>
+
+<section id="contact" class="reveal ambient">
+  <div class="scene">
+    <img class="prop" data-enter="right" style="right:-8px; top:-8px; width:min(28vw,380px)" src="Images/props/plane.png" alt="" aria-hidden="true" id="p-contact-plane">
+  </div>
+
+  <h2>Contact & Resume</h2>
+  <p class="sec-lead">Reach out anytime for full-time roles or part-time collaborations.</p>
+
+  <div class="contact-links" style="margin-bottom:14px">
+    <div>
+      Email: <a href="mailto:viknesh2022@gmail.com">viknesh2022@gmail.com</a>
+      <button class="copy" data-copy="viknesh2022@gmail.com" aria-label="Copy email">Copy</button>
+    </div>
+    <div>
+      Phone / WhatsApp: <a href="tel:+919600681922">+91-9600681922</a>
+      <button class="copy" data-copy="+919600681922" aria-label="Copy phone">Copy</button>
+    </div>
+    <div class="icon-links" style="margin-top:10px">
+      <a class="icon-btn" href="https://github.com/VikneshVK" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.5-1.5-1.9-1.5-1.9-1.2-.8.1-.8.1-.8 1.3.1 2 .9 2 .9 1.1 1.9 2.9 1.4 3.6 1.1.1-.8.4-1.4.8-1.7-2.6-.3-5.2-1.3-5.2-5.9 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.6.1-3.3 0 0 1-.3 3.4 1.2a11.6 11.6 0 0 1 6.2 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 3 .1 3.3.8.9 1.2 2 1.2 3.3 0 4.6-2.6 5.6-5.3 5.9.4.3.8 1 .8 2.1v3.1c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>
+        <span>GitHub</span>
+      </a>
+      <a class="icon-btn" href="https://www.linkedin.com/in/viknesh-venkatesan/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.45 20.45h-3.55v-5.6c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.7H9.36V9h3.4v1.56h.05c.47-.9 1.62-1.85 3.34-1.85 3.57 0 4.23 2.35 4.23 5.41v6.33zM5.34 7.44a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+        <span>LinkedIn</span>
+      </a>
+    </div>
+  </div>
+
+  <a class="btn primary" href="Resume/VikneshVenkatesanResume - GameDevelopment.pdf" download>Download Game Developer Resume (PDF)</a>
+</section>
+
+<script>
+/* ===== Progress bar ===== */
+const progress = document.getElementById('progress');
+addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  progress.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+});
+
+/* ===== Reduce Motion toggle ===== */
+const toggle = document.getElementById('reduceToggle');
+toggle.addEventListener('click', ()=>{
+  const on = document.body.classList.toggle('reduce-motion');
+  toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+  toggle.textContent = 'Reduce Motion: ' + (on ? 'On' : 'Off');
+});
+
+/* ===== Particles (behind props) ===== */
+const bg = document.getElementById('particles');
+const g = bg.getContext('2d');
+function sizeCanvas(){ bg.width = innerWidth; bg.height = innerHeight; }
+sizeCanvas(); addEventListener('resize', sizeCanvas);
+class P{ constructor(){ this.reset(); }
+  reset(){ this.r=Math.random()*3+1; this.x=Math.random()*bg.width; this.y=Math.random()*bg.height;
+           this.dx=(Math.random()*0.4)-0.2; this.dy=(Math.random()*0.4)-0.2; this.c='rgba(184,41,255,0.6)'; }
+  draw(){ g.beginPath(); g.arc(this.x,this.y,this.r,0,Math.PI*2); g.fillStyle=this.c; g.fill(); }
+  step(){ if(this.x<0||this.x>bg.width) this.dx*=-1; if(this.y<0||this.y>bg.height) this.dy*=-1; this.x+=this.dx; this.y+=this.dy; this.draw(); } }
+let ps=[]; function initP(){ ps=[]; const n=(bg.width*bg.height)/9000; for(let i=0;i<n;i++) ps.push(new P()); }
+function loop(){ requestAnimationFrame(loop); g.clearRect(0,0,bg.width,bg.height); for(const p of ps) p.step(); }
+initP(); loop(); addEventListener('resize', initP);
+
+/* ===== Replayable reveals ===== */
+const revealItems = document.querySelectorAll('.reveal');
+revealItems.forEach(el => el.style.willChange = 'transform, opacity');
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    const el = e.target;
+    if (document.body.classList.contains('reduce-motion')) { el.classList.add('show'); return; }
+    if (e.isIntersecting) el.classList.add('show'); else el.classList.remove('show');
+  });
+},{root:null, rootMargin:'0px 0px -15%', threshold:0});
+revealItems.forEach(el => revealObserver.observe(el));
+
+/* ===== Copy buttons ===== */
+document.querySelectorAll('.copy').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const val = btn.getAttribute('data-copy');
+    navigator.clipboard.writeText(val).then(()=>{
+      const prev = btn.textContent; btn.textContent = 'Copied!'; setTimeout(()=>btn.textContent=prev, 1200);
+    });
+  });
+});
+
+/* ===== Slideshows (Speakaroo/Writearoo) ===== */
+function slideshow(id, imgs, interval=2400){
+  const box = document.getElementById(id);
+  const dotsWrap = document.createElement('div'); dotsWrap.className='dots'; box.appendChild(dotsWrap);
+  const els = imgs.map((src,i)=>{ const im=new Image(); im.src=src; if(i===0) im.classList.add('active'); box.appendChild(im);
+                                   const d=document.createElement('div'); d.className='dot'; if(i===0) d.classList.add('active'); dotsWrap.appendChild(d); return im; });
+  const dots=[...box.querySelectorAll('.dot')];
+  let cur=0, t; function go(n){ els[cur].classList.remove('active'); dots[cur].classList.remove('active'); cur=n; els[cur].classList.add('active'); dots[cur].classList.add('active'); }
+  function next(){ go((cur+1)%els.length); }
+  dots.forEach((d,i)=>d.addEventListener('click', ()=>{ go(i); restart(); }));
+  function restart(){ clearInterval(t); t=setInterval(next, interval); }
+  t=setInterval(next, interval);
+}
+slideshow('speakaroo-slideshow', [
+  'Images/Speakaroo posters/1.png','Images/Speakaroo posters/2.png','Images/Speakaroo posters/3.png',
+  'Images/Speakaroo posters/4.png','Images/Speakaroo posters/5.png','Images/Speakaroo posters/6.png','Images/Speakaroo posters/7.png'
+]);
+slideshow('writearoo-slideshow', [
+  'Images/writearoo posters/1.png','Images/writearoo posters/2.png','Images/writearoo posters/3.png',
+  'Images/writearoo posters/4.png','Images/writearoo posters/5.png','Images/writearoo posters/6.png','Images/writearoo posters/7.png'
+]);
+
+/* ===== Prop entrance on view, then idle loops ===== */
+const animTargets = [
+  ['#p-hero-gamepad', ['bob','sway']],
+  ['#p-hero-code',    ['driftxy']],
+  ['#p-about-laptop', ['driftxy']],
+  ['#p-projects-vr',  ['rock','shimmer']],
+  ['#p-tools-puzzle', ['bounceSmall']],
+  ['#p-tools-gear',   ['rotateSlow']],
+  ['#p-contact-plane',['driftxy']]
+];
+const animObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    const el = e.target;
+    if (!e.isIntersecting || document.body.classList.contains('reduce-motion')) return;
+
+    const dir = el.getAttribute('data-enter');
+    if (dir && !el.dataset.entered) {
+      el.classList.add(`enter-${dir}`);
+      el.dataset.entered = '1';
+      setTimeout(()=>{
+        el.classList.remove(`enter-${dir}`);
+        el.classList.add('run');
+        const cfg = animTargets.find(([sel])=>el.matches(sel));
+        if(cfg){ cfg[1].forEach(c=>el.classList.add(c)); }
+        if (el.id === 'p-contact-plane') {
+          setInterval(()=>{ if(!document.body.classList.contains('reduce-motion')){ el.classList.add('swoop'); setTimeout(()=>el.classList.remove('swoop'), 2300);} },15000);
+        }
+      }, 600);
+    } else {
+      if (!el.classList.contains('run')) {
+        el.classList.add('run');
+        const cfg = animTargets.find(([sel])=>el.matches(sel));
+        if(cfg){ cfg[1].forEach(c=>el.classList.add(c)); }
+      }
+    }
+  });
+},{threshold:.22});
+animTargets.forEach(([sel])=>{ const el=document.querySelector(sel); if(el) animObserver.observe(el); });
+
+/* ===== Carousels (1-up, looping, click-safe CTAs) ===== */
+function setupCarousel(wrapper){
+  const track = wrapper.querySelector('.track');
+  const left  = wrapper.querySelector('.arrow.left');
+  const right = wrapper.querySelector('.arrow.right');
+  const slides = [...track.querySelectorAll('.slide')];
+
+  let slideW = () => wrapper.clientWidth;              // 1-up = wrapper width
+  const getIndex = () => Math.round(track.scrollLeft / slideW());
+  const goTo = i => track.scrollTo({ left: i * slideW(), behavior: 'smooth' });
+  const next = () => goTo( (getIndex() + 1) % slides.length );                 // loop >>
+  const prev = () => goTo( (getIndex() - 1 + slides.length) % slides.length ); // loop <<
+
+  left.addEventListener('click',  prev);
+  right.addEventListener('click', next);
+
+  wrapper.tabIndex = 0;
+  wrapper.addEventListener('keydown', e=>{
+    if(e.key==='ArrowLeft')  prev();
+    if(e.key==='ArrowRight') next();
+  });
+
+  // drag / swipe with click-through protection
+  let isDown=false, startX=0, startLeft=0;
+  track.addEventListener('pointerdown', e=>{
+    if (e.target.closest('a, button, .cta')) return; // don't hijack link/button clicks
+    isDown=true; startX=e.clientX; startLeft=track.scrollLeft; track.setPointerCapture(e.pointerId);
+  });
+  track.addEventListener('pointermove', e=>{
+    if(!isDown) return; const dx=e.clientX-startX; track.scrollLeft=startLeft-dx;
+  });
+  const end = ()=>{ isDown=false; };
+  track.addEventListener('pointerup', end);
+  track.addEventListener('pointercancel', end);
+  track.addEventListener('pointerleave', end);
+
+  addEventListener('resize', ()=>{ goTo(getIndex()); });
+}
+document.querySelectorAll('.carousel').forEach(setupCarousel);
+</script>
+</body>
+</html>
