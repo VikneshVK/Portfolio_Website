@@ -212,7 +212,8 @@
       <a href="#about" class="link">About</a>
       <a href="#services" class="link">Services</a>
       <a href="#projects" class="link">Projects</a>
-      <a href="#tools" class="link">Tools</a>
+      <a href="#ai-workflow" class="link">AI Workflow</a>
+      <a href="#personal-projects" class="link">Side Projects</a>
       <a href="#contact" class="link">Contact</a>
       <button id="reduceToggle" class="toggle" aria-pressed="false">Reduce Motion: Off</button>
     </div>
@@ -248,11 +249,12 @@
   <h2>About Me</h2>
   <p class="sec-lead">
     I’m a Unity game developer with a focus on building scalable gameplay systems, mobile performance optimisation, and UI/UX implementation using Unity and C#. I’m comfortable across the full development cycle — from prototyping and systems design through to debugging, Firebase integration, and store submission. 
-    I also build Python-powered dev tools on the side to keep my own workflows sharp.
+    I also build Python-powered dev tools on the side to keep my own workflows sharp. I actively build with AI — integrating on-device speech models like Whisper.cpp and Azure AI Foundry into shipped gameplay, using Stable Diffusion/ComfyUI for AI-assisted art pipelines, and working AI-first with tools like Claude Code and Antigravity to prototype and ship faster.
   </p>
 
   <div class="grid-2-3">
     <div class="card"><strong>Tech Stack</strong><br/>Unity (UI Toolkit, Shader Graph, HDRP, Asset Bundles, ScriptableObjects, NavMesh), C#, Firebase, Git</div>
+    <div class="card"><strong>AI Tooling</strong><br/>Whisper.cpp, Azure AI Foundry, Claude Code, Antigravity, Stable Diffusion / ComfyUI</div>
     <div class="card"><strong>Languages</strong><br/>Tamil (Native), English (Fluent), Telugu (Conversational – spoken)</div>
   </div>
 
@@ -479,24 +481,75 @@
           </div>
         </article>
       </div>
+      <!-- Social Adventures -->
+      <div class="slide">
+        <article class="project">
+          <div class="slideshow" id="socialadventures-slideshow"></div>
+          <div class="project-content">
+            <div class="tag">Educational • Android</div>
+            <h3>Social Adventures</h3>
+            <p>Gamified social, communication, and emotional-skills learning app for children.</p>
+            <div class="btn-row">
+              <!-- Play Store badge -->
+              <a href="https://play.google.com/store/apps/details?id=com.littlelearninglab.SocialGame" target="_blank" rel="noopener" aria-label="Get on Google Play">
+                <svg width="156" height="46" viewBox="0 0 156 46" role="img" aria-hidden="false">
+                  <rect rx="8" width="156" height="46" fill="#000"/>
+                  <g transform="translate(10,7)">
+                    <path d="M7.5 0l12 10-6 3.5-6-13.5z" fill="#34A853"/><path d="M7.5 22L19.5 12l-6-3.5-6 13.5z" fill="#EA4335"/><path d="M19.5 12l6.5 3.8c1 .6 1 2 0 2.6L19.5 22l-6-10 6-3.9z" fill="#FBBC05"/><path d="M7.5 0l6 10-6 3.9V0z" fill="#4285F4"/>
+                    <text x="30" y="19" fill="#fff" font-family="Inter, Arial" font-size="12" font-weight="700">GET IT ON</text>
+                    <text x="30" y="33" fill="#fff" font-family="Inter, Arial" font-size="16" font-weight="700">Google Play</text>
+                  </g>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
     <button class="arrow right" aria-label="Next">›</button>
   </div>
 </section>
 
-<section id="tools" class="reveal ambient">
+<section id="ai-workflow" class="reveal ambient">
   <div class="scene">
     <img class="prop" data-enter="up"   style="left:-12px; bottom:-12px; width:min(30vw,420px)" src="Images/props/puzzle.png"   alt="" aria-hidden="true" id="p-tools-puzzle">
     <img class="prop" data-enter="down" style="right:-10px; top:-10px;   width:min(26vw,360px)" src="Images/props/settings.png" alt="" aria-hidden="true" id="p-tools-gear">
   </div>
 
-  <h2>Tools & Automation</h2>
+  <h2>AI-Assisted Game Dev Workflow</h2>
+  <p class="sec-lead">I build games with AI as part of the pipeline, not an afterthought — here's how.</p>
   <div class="grid-2-3">
-    <div class="card"><h3>Local Coaching Chatbot (LLM)</h3><p>Tkinter UI + local instruction-tuned model; session logging, persona templating, image-reactive UI slot.</p></div>
-    <div class="card"><h3>Immersive Audio/Video Player</h3><p>PyQt6 player with splash, animated background, panic key, settings.json, and a JS bridge for UI controls.</p></div>
-    <div class="card"><h3>Freelance Gig Tracker</h3><p>Lightweight dashboard to log leads, statuses, payouts, and reminders (CSV/SQLite backend).</p></div>
-    <div class="card"><h3>Browser Augmentation Toolkit</h3><p>Tampermonkey userscripts for text rewriting, overlays/notifications, and typing-rate hints.</p></div>
+    <div class="card"><h3>Whisper.cpp</h3><p>On-device speech recognition powering real-time pronunciation feedback in Speakaroo's flashcard mode — shipped, user-facing AI, not just a dev tool.</p></div>
+    <div class="card"><h3>Azure AI Foundry</h3><p>Backend AI integration supporting Speakaroo's speech-evaluation pipeline.</p></div>
+    <div class="card"><h3>Claude Code</h3><p>Used to accelerate implementation and iteration speed while building Writearoo.</p></div>
+    <div class="card"><h3>Antigravity</h3><p>Used across Social Adventures end-to-end — from prototyping through shipping to the Play Store.</p></div>
+    <div class="card"><h3>Stable Diffusion / ComfyUI</h3><p>Local AI-assisted art pipeline running on an RTX 3060 for rapid asset generation and iteration.</p></div>
   </div>
+</section>
+
+<section id="personal-projects" class="reveal ambient">
+  <h2>Personal Projects</h2>
+  <p class="sec-lead">Side projects where I'm pushing into new territory.</p>
+  <div class="grid-2-3">
+    <div class="card">
+      <h3>Chess (Unity) <span class="chip" style="margin-left:6px">In Development</span></h3>
+      <p>Built to learn multiplayer networking and AI opponent design — screen-size-first board generation, algebraic move notation, a full timer system, and a minimax + alpha-beta pruning chess AI.</p>
+      <div class="btn-row" style="margin-top:10px">
+        <a class="btn" href="https://github.com/VikneshVK/Chess" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Tamil Rhythm Game <span class="chip" style="margin-left:6px">Work in Progress</span></h3>
+      <p>A Tamil-song rhythm game exploring timing systems and audio-sync mechanics. Demo video audio is muted due to copyright.</p>
+      <div class="btn-row" style="margin-top:10px">
+        <a class="btn" href="https://github.com/VikneshVK/Piano-Tiles-with-Tamilsong" target="_blank" rel="noopener">View on GitHub</a>
+        <a class="btn" href="https://www.youtube.com/shorts/yFCqhTs67YQ" target="_blank" rel="noopener">Watch Demo</a>
+      </div>
+    </div>
+  </div>
+  <p class="sec-lead" style="font-size:.85rem; margin-top:18px">
+    * <strong>In Development</strong> — actively being built in Unity.&nbsp; <strong>Work in Progress</strong> — core mechanics done; song selection, copyright clearance, and related details still being worked out.
+  </p>
 </section>
 
 <section id="contact" class="reveal ambient">
@@ -528,7 +581,7 @@
     </div>
   </div>
 
-  <a class="btn primary" href="Resume/viknesh_Venkatesan Resume_CL.pdf" download>Download Game Developer Resume (PDF)</a>
+  <a class="btn primary" href="Resume/Viknesh_Venkatesan_Resume_19_07_26.pdf" download>Download Game Developer Resume (PDF)</a>
 </section>
 
 <script>
@@ -603,6 +656,10 @@ slideshow('speakaroo-slideshow', [
 slideshow('writearoo-slideshow', [
   'Images/writearoo posters/1.png','Images/writearoo posters/2.png','Images/writearoo posters/3.png',
   'Images/writearoo posters/4.png','Images/writearoo posters/5.png','Images/writearoo posters/6.png','Images/writearoo posters/7.png'
+]);
+slideshow('socialadventures-slideshow', [
+  'Images/Social Adventures posters/1.png','Images/Social Adventures posters/2.png','Images/Social Adventures posters/3.png',
+  'Images/Social Adventures posters/4.png','Images/Social Adventures posters/5.png'
 ]);
 
 /* ===== Prop entrance on view, then idle loops ===== */
@@ -686,5 +743,3 @@ document.querySelectorAll('.carousel').forEach(setupCarousel);
 </script>
 </body>
 </html>
-
-
